@@ -23,7 +23,17 @@ router.post('/crear',(req,res)=>{
         console.log(err);
         throw err;
     });;
-    
 });
+
+router.get('/listar',(req,res)=>{
+    cancion.find({},{
+    }).then(function (docs) {
+    res.status(200).json(docs)
+    }).catch(function (err) {
+    console.log(err);
+    throw err;
+    });
+    });
+
 
 module.exports=router;
