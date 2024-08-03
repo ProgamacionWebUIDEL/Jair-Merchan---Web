@@ -1,7 +1,11 @@
-var mongoose = require('mongoose');
-var connection = mongoose.connect('mongodb://mongodb:27017/test');
+const mongoose = require('mongoose');
 
-mongoose.connection.on('open',(ref)=>{
-    console.log('Conectado MongoDb');
+// Conectar a la base de datos
+mongoose.connect('mongodb://127.0.0.1:27017/test');
+
+// Manejar eventos de conexión
+const db = mongoose.connection;
+db.on('error', console.error.bind(console, 'Error de conexión a la base de datos:'));
+db.once('open', () => {
+  console.log('¡Conexión a la base de datos establecida correctamente!');
 });
-module.exports=connection

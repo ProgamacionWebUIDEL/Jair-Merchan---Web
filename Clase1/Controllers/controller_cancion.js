@@ -25,15 +25,54 @@ router.post('/crear',(req,res)=>{
     });;
 });
 
-router.get('/listar',(req,res)=>{
-    cancion.find({},{
-    }).then(function (docs) {
-    res.status(200).json(docs)
-    }).catch(function (err) {
-    console.log(err);
-    throw err;
-    });
-    });
+router.get('/listar', async (req, res) => {
+    try {
+      const canciones = await cancion.find({});
+      res.status(200).json(canciones);
+    } catch (err) {
+      console.error('Error al listar las canciones:', err);
+      res.status(500).json({ error: 'Ocurrió un error al obtener las canciones.' });
+    }
+  });
+
+  router.put('/actualizar/:id', async (req, res) => {
+    const { id } = req.params;
+    const updateData = req.body;
+  
+    try {
+      const cancionActualizada = await cancion.findByIdAndUpdate(id, updateData, { new: true });
+  
+      if (!cancionActualizada) {
+        return res.status(404).json({ error: 'Canción no encontrada' });
+      }
+  
+      res.status(200).json(cancionActualizada);
+    } catch (err) {
+      console.error('Error al actualizar la canción:', err);
+      res.status(500).json({ error: 'Ocurrió un error al actualizar la canción.' });
+    }
+  });
+  
+  router.delete('/eliminar/:id', async (req, res) => {
+    const { id } = req.params;
+  
+    try {
+      const cancionEliminada = await cancion.findByIdAndDelete(id);
+  
+      if (!cancionEliminada) {
+        return res.status(404).json({ error: 'Canción no encontrada' });
+      }
+  
+      res.status(200).json({ message: 'Canción eliminada exitosamente' });
+    } catch (err) {
+      console.error('Error al eliminar la canción:', err);
+      res.status(500).json({ error: 'Ocurrió un error al eliminar la canción.' });
+    }
+  });
+  
+  
+module.exports = router;
 
 
-module.exports=router;
+
+
